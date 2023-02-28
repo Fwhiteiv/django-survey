@@ -27,6 +27,9 @@ class Survey(models.Model):
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Users can see it and answer it"), default=True)
     need_logged_user = models.BooleanField(_("Only authenticated users can see it and answer it"))
+    allow_multiple_responses = models.BooleanField(
+        default=False,
+        help_text='When checked, a user will always create a new response and disable editable answers.')
     editable_answers = models.BooleanField(_("Users can edit their answers afterwards"), default=True)
     display_method = models.SmallIntegerField(
         _("Display method"), choices=DISPLAY_METHOD_CHOICES, default=ALL_IN_ONE_PAGE
@@ -42,6 +45,12 @@ class Survey(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def save(self, *args, **kwargs):
+        '''Overloaded to make some effort to not duplicate capabilities.'''
+        if self.allow_multiple_responses:
+            self.editable_answers = False
+        super().save(*args, **kwargs)
 
     @property
     def safe_name(self):

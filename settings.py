@@ -118,7 +118,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "survey",
     "bootstrapform",
-    "rosetta",
+    #"rosetta",
 )
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

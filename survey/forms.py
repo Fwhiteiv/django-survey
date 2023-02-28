@@ -62,7 +62,10 @@ class ResponseForm(models.ModelForm):
 
         self.add_questions(kwargs.get("data"))
 
-        self._get_preexisting_response()
+        if self.survey.allow_multiple_responses:
+            self.response = None
+        else:
+            self._get_preexisting_response()
 
         if not self.survey.editable_answers and self.response is not None:
             for name in self.fields.keys():
@@ -112,13 +115,8 @@ class ResponseForm(models.ModelForm):
         if not self.user.is_authenticated:
             self.response = None
         else:
-            try:
-                self.response = Response.objects.prefetch_related("user", "survey").get(
-                    user=self.user, survey=self.survey
-                )
-            except Response.DoesNotExist:
-                LOGGER.debug("No saved response for '%s' for user %s", self.survey, self.user)
-                self.response = None
+            # Get the most recent response
+            self.response = Response.objects.filter(user=self.user, survey=self.survey).last()
         return self.response
 
     def _get_preexisting_answers(self):
@@ -262,9 +260,12 @@ class ResponseForm(models.ModelForm):
 
     def save(self, commit=True):
         """Save the response object"""
-        # Recover an existing response from the database if any
-        #  There is only one response by logged user.
-        response = self._get_preexisting_response()
+        # If multiple allowed, create new response
+        if not self.survey.allow_multiple_responses:
+            # Recover an existing response from the database if any
+            response = self._get_preexisting_response()
+        else:
+            response = None
         if not self.survey.editable_answers and response is not None:
             return None
         if response is None:
