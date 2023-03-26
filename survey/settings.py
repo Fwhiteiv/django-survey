@@ -47,7 +47,7 @@ TEMPLATES = [
 ]
 
 
-INSTALLED_APPS = ("survey", "bootstrapform")
+INSTALLED_APPS = ("survey", "bootstrapform", "modeltranslation")
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
@@ -60,7 +60,7 @@ LANGUAGES = (
     ("fr", "french"),
     ("ja", "Japanese"),
     ("nl", "Dutch"),
-    ("zh", "Chinese"),
+    ("zh-cn", "Simplified Chinese"),
     ("de", "German"),
     ("id", "Indonesian"),
     ("pt", "Portuguese"),

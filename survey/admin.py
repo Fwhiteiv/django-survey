@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 
 from survey.actions import make_published
@@ -46,7 +47,45 @@ class ResponseAdmin(admin.ModelAdmin):
     readonly_fields = ("survey", "created", "updated", "interview_uuid", "user")
 
 
+if 'modeltranslation' in settings.INSTALLED_APPS:
+    from modeltranslation.admin import TabbedTranslationAdmin, TranslationStackedInline, TranslationTabularInline
+
+    class TranslationQuestionInline(QuestionInline, TranslationStackedInline):
+        pass
+
+
+    class TranslationCategoryInline(CategoryInline, TranslationTabularInline):
+        pass
+
+
+    class TranslationAnswerInline(AnswerBaseInline, TranslationStackedInline):
+        pass
+
+
+    class TranslationResponseAdmin(ResponseAdmin):
+        # Directly apply media, because Response is not a translation registered model
+        class Media:
+                js = (
+                    'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+                    'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+                    'modeltranslation/js/tabbed_translation_fields.js',
+                )
+                css = {
+                    'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+                }
+
+        inlines = [TranslationAnswerInline]
+
+
+    class TranslationSurveyAdmin(SurveyAdmin, TabbedTranslationAdmin):
+        inlines = [TranslationCategoryInline, TranslationQuestionInline]
+
+
+    admin.site.register(Survey, TranslationSurveyAdmin)
+    admin.site.register(Response, TranslationResponseAdmin)
+else:
+    admin.site.register(Survey, SurveyAdmin)
+    admin.site.register(Response, ResponseAdmin)
+
 # admin.site.register(Question, QuestionInline)
 # admin.site.register(Category, CategoryInline)
-admin.site.register(Survey, SurveyAdmin)
-admin.site.register(Response, ResponseAdmin)

@@ -16,6 +16,10 @@ language.
 Professional support for django-survey-and-report is available as part of the
 [Tidelift Subscription](https://tidelift.com/subscription/pkg/pypi-django-survey-and-report?utm_source=pypi-django-survey-and-report&utm_medium=referral&utm_campaign=enterprise)
 
+
+This version has been modified for StreaMD to allow multiple responses per survey and integration with the django-modeltranslation
+package.
+
 ## Table of contents
 
 - [Language available](#language-available)
@@ -69,6 +73,7 @@ TEX_DIRECTORY = Path("tex") # Define the directory where tex files and pdf are e
 INSTALLED_APPS += [
 	'bootstrapform',
 	'survey'
+	'modeltranslation', # Add for translation support. Put before django.contrib.admin to use with admin.
 ]
 ```
 

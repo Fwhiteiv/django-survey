@@ -108,6 +108,7 @@ ROOT_URLCONF = "urls"
 WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = (
+    "modeltranslation",
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",
@@ -132,7 +133,7 @@ LANGUAGES = (
     ("fr", "french"),
     ("ja", "Japanese"),
     ("nl", "Dutch"),
-    ("zh", "Chinese"),
+    ("zh-cn", "Chinese"),
     ("de", "German"),
     ("id", "Indonesian"),
     ("pt", "Portuguese"),
@@ -140,6 +141,10 @@ LANGUAGES = (
     ("tr", "Turkish"),
     ("gr", "Greek"),
 )
+
+MODELTRANSLATION_LANGUAGES=('en', 'es', 'ko', 'ru', 'zh-cn', 'ro', 'ar', 'pl', 'hr',
+                            'vi')
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 
 LOGIN_REDIRECT_URL = "/"
 

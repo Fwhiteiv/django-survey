@@ -3,9 +3,10 @@ import uuid
 
 from django import forms
 from django.conf import settings
-from django.forms import models
 from django.urls import reverse
 from django.utils.text import slugify
+
+from modeltranslation.forms import TranslationModelForm
 
 from survey.models import Answer, Category, Question, Response, Survey
 from survey.signals import survey_completed
@@ -14,7 +15,7 @@ from survey.widgets import ImageSelectWidget
 LOGGER = logging.getLogger(__name__)
 
 
-class ResponseForm(models.ModelForm):
+class ResponseForm(TranslationModelForm):
 
     FIELDS = {
         Question.TEXT: forms.CharField,
