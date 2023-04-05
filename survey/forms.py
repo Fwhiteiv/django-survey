@@ -63,10 +63,7 @@ class ResponseForm(TranslationModelForm):
 
         self.add_questions(kwargs.get("data"))
 
-        if self.survey.allow_multiple_responses:
-            self.response = None
-        else:
-            self._get_preexisting_response()
+        self._get_preexisting_response()
 
         if not self.survey.editable_answers and self.response is not None:
             for name in self.fields.keys():
@@ -115,9 +112,11 @@ class ResponseForm(TranslationModelForm):
 
         if not self.user.is_authenticated:
             self.response = None
+        elif self.survey.allow_multiple_responses:
+            self.response = None
         else:
             # Get the most recent response
-            self.response = Response.objects.filter(user=self.user, survey=self.survey).last()
+            self.response = Response.objects.filter(user=self.user, survey=self.survey).prefetch_related("user", "survey").last()
         return self.response
 
     def _get_preexisting_answers(self):
@@ -261,12 +260,7 @@ class ResponseForm(TranslationModelForm):
 
     def save(self, commit=True):
         """Save the response object"""
-        # If multiple allowed, create new response
-        if not self.survey.allow_multiple_responses:
-            # Recover an existing response from the database if any
-            response = self._get_preexisting_response()
-        else:
-            response = None
+        response = self._get_preexisting_response()
         if not self.survey.editable_answers and response is not None:
             return None
         if response is None:
