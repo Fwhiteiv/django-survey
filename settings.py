@@ -133,7 +133,7 @@ LANGUAGES = (
     ("fr", "french"),
     ("ja", "Japanese"),
     ("nl", "Dutch"),
-    ("zh-cn", "Chinese"),
+    ("zh", "Chinese"),
     ("de", "German"),
     ("id", "Indonesian"),
     ("pt", "Portuguese"),
@@ -142,7 +142,7 @@ LANGUAGES = (
     ("gr", "Greek"),
 )
 
-MODELTRANSLATION_LANGUAGES=('en', 'es', 'ko', 'ru', 'zh-cn', 'ro', 'ar', 'pl', 'hr',
+MODELTRANSLATION_LANGUAGES=('en', 'es', 'ko', 'ru', 'zh-hans', 'ro', 'ar', 'pl', 'hr',
                             'vi')
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 

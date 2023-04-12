@@ -60,7 +60,7 @@ LANGUAGES = (
     ("fr", "french"),
     ("ja", "Japanese"),
     ("nl", "Dutch"),
-    ("zh-cn", "Simplified Chinese"),
+    ("zh-hans", "Simplified Chinese"),
     ("de", "German"),
     ("id", "Indonesian"),
     ("pt", "Portuguese"),
