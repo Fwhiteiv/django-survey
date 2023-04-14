@@ -16,6 +16,8 @@ class QuestionInline(admin.StackedInline):
         formset = super().get_formset(request, survey_obj, *args, **kwargs)
         if survey_obj:
             formset.form.base_fields["category"].queryset = survey_obj.categories.all()
+        else:
+            formset.form.base_fields["category"].queryset = Category.objects.none()
         return formset
 
 
