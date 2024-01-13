@@ -48,6 +48,7 @@ class Survey2Tex(Survey2X):
             latex_file.text += function_(survey)
 
     def treat_question(self, question):
+        # pylint: disable=too-many-locals
         LOGGER.info("Treating, %s %s", question.pk, question.text)
         options = self.tconf.get(survey_name=self.survey.name, question_text=question.text)
         multiple_charts = options.get("multiple_charts")
@@ -96,19 +97,15 @@ class Survey2Tex(Survey2X):
                 q2tex = q2tex_class(question, latex_label=i, **opts)
                 question_synthesis += q2tex.tex()
         section_title = Question2Tex.html2latex(question.text)
-        return """
+        return f"""
 \\clearpage{{}}
-\\section{{{}}}
+\\section{{{section_title}}}
 
-\\label{{sec:{}}}
+\\label{{sec:{question.pk}}}
 
-{}
+{question_synthesis}
 
-""".format(
-            section_title,
-            question.pk,
-            question_synthesis,
-        )
+"""
 
     @property
     def file_modification_time(self):
