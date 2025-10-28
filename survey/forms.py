@@ -43,6 +43,7 @@ class ResponseForm(TranslationModelForm):
         """Expects a survey object to be passed in initially"""
         self.survey = kwargs.pop("survey")
         self.user = kwargs.pop("user")
+        self.existing_response_id = kwargs.pop("response_id", None)
         try:
             self.step = int(kwargs.pop("step"))
         except KeyError:
@@ -112,6 +113,9 @@ class ResponseForm(TranslationModelForm):
 
         if not self.user.is_authenticated:
             self.response = None
+        elif self.existing_response_id:
+            self.response = Response.objects.filter(user=self.user, survey=self.survey,
+                                                    interview_uuid=self.existing_response_id).prefetch_related("user", "survey").last()
         elif self.survey.allow_multiple_responses:
             self.response = None
         else:

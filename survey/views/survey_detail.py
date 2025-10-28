@@ -15,6 +15,7 @@ class SurveyDetail(View):
     def get(self, request, *args, **kwargs):
         survey = kwargs.get("survey")
         step = kwargs.get("step", 0)
+        response_id = kwargs.get("response_id", None)
         if survey.template is not None and len(survey.template) > 4:
             template_name = survey.template
         else:
@@ -25,7 +26,7 @@ class SurveyDetail(View):
         if survey.need_logged_user and not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
-        form = ResponseForm(survey=survey, user=request.user, step=step)
+        form = ResponseForm(survey=survey, user=request.user, step=step, response_id=response_id)
         categories = form.current_categories()
 
         asset_context = {
