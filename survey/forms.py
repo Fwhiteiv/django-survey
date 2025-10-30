@@ -49,7 +49,6 @@ class ResponseForm(TranslationModelForm):
         except KeyError:
             self.step = None
         super().__init__(*args, **kwargs)
-        self.uuid = uuid.uuid4().hex
 
         self.categories = self.survey.non_empty_categories()
         self.qs_with_no_cat = self.survey.questions.filter(category__isnull=True).order_by("order", "id")
@@ -65,6 +64,11 @@ class ResponseForm(TranslationModelForm):
         self.add_questions(kwargs.get("data"))
 
         self._get_preexisting_response()
+
+        if self.response:
+            self.uuid = self.response.interview_uuid
+        else:
+            self.uuid = uuid.uuid4().hex
 
         if not self.survey.editable_answers and self.response is not None:
             for name in self.fields.keys():
