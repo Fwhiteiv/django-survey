@@ -48,8 +48,10 @@ class SurveyDetail(View):
         survey = kwargs.get("survey")
         if survey.need_logged_user and not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+        response_id = kwargs.get("response_id", None)
 
-        form = ResponseForm(request.POST, survey=survey, user=request.user, step=kwargs.get("step", 0))
+        form = ResponseForm(request.POST, survey=survey, user=request.user, step=kwargs.get("step", 0),
+                            response_id=response_id)
         categories = form.current_categories()
 
         if not survey.editable_answers and form.response is not None:
