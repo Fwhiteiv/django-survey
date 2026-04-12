@@ -16,7 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class ResponseForm(TranslationModelForm):
-
     FIELDS = {
         Question.TEXT: forms.CharField,
         Question.SHORT_TEXT: forms.CharField,
@@ -188,7 +187,7 @@ class ResponseForm(TranslationModelForm):
         if data:
             # Initialize the field field from a POST request, if any.
             # Replace values from the database
-            initial = data.get("question_%d" % question.pk)
+            initial = data.get(f"question_{question.pk}")
         return initial
 
     def get_question_widget(self, question):
@@ -250,7 +249,7 @@ class ResponseForm(TranslationModelForm):
         if question.type == Question.DATE:
             field.widget.attrs["class"] = "date"
         # logging.debug("Field for %s : %s", question, field.__dict__)
-        self.fields["question_%d" % question.pk] = field
+        self.fields[f"question_{question.pk}"] = field
 
     def has_next_step(self):
         if not self.survey.is_all_in_one_page():

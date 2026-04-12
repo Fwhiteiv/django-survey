@@ -12,7 +12,6 @@ HERE = Path(__file__).parent
 
 
 class Configuration:
-
     DEFAULT_PATH = Path(HERE, "default_conf.yaml")
 
     def __init__(self, configuration_file=None):
@@ -69,7 +68,7 @@ class Configuration:
         for survey_name in list(configuration.keys()):
             self.check_survey_exists(survey_name)
             if not configuration[survey_name]:
-                raise ValueError("Nothing in %s's configuration" % survey_name)
+                raise ValueError(f"Nothing in {survey_name}'s configuration")
         return configuration
 
     def optional_update(self, dict_, update_dict, key):

@@ -9,7 +9,6 @@ HERE = Path(__file__).parent
 
 
 class TestManagement(BaseTest):
-
     """Permit to check if export result is working as intended."""
 
     def create_answers(self, username, a1, a2, a3):
@@ -83,15 +82,13 @@ class TestManagement(BaseTest):
     def setUp(self):
         super().setUp()
         self.create_survey()
-        self.expected_content = """\
+        self.expected_content = f"""\
 user,Aèbc?,Bècd?,Cède?,Dèef?
 ps250112,1é,2é,3é,
 pierre,,,,
-{},1|1a|1b,2|2a|2b,3|3a|3b,
-{},1e|1é|1ë,2e|2é|2ë,3e|3é|3ë,
-Anonymous,,,,""".format(
-            self.username, self.other_username
-        )
+{self.username},1|1a|1b,2|2a|2b,3|3a|3b,
+{self.other_username},1e|1é|1ë,2e|2é|2ë,3e|3é|3ë,
+Anonymous,,,,"""
         self.expected_header = ["user", "Aèbc?", "Bècd?", "Cède?", "Dèef?"]
         self.conf_dir = Path(HERE, "..", "exporter", "tex")
         self.test_conf_path = Path(self.conf_dir, "test_conf.yaml")

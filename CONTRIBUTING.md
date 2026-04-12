@@ -9,6 +9,7 @@
     - [Adding test data](#adding-test-data)
     - [Launching coverage](#launching-coverage)
     - [Applying Lint](#applying-lint)
+  - [Releasing](#releasing)
 - [Translating the project](#translating-the-project)
   - [As a developer](#as-a-developer)
   - [As a translator](#as-a-translator)
@@ -64,6 +65,20 @@ xdg-open htmlcov/index.html
 
 We're using `pre-commit`, it should take care of linting during commit.
 
+### Releasing
+
+PyPI releases are created by
+[GitHub Actions](https://github.com/Pierre-Sassoulas/django-survey/blob/main/.github/workflows/release.yaml).
+To create a new release:
+
+1. Update the project version in `pyproject.toml`.
+2. Create a
+   [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release).
+   This release should point to a git tag of the format `vX.Y.Z`, where `X.Y.Z` matches
+   the version number set in the previous step. The git tag may be created independently
+   or as part of the GitHub Release step as indicated by the linked instructions.
+3. Update target release milestones for affected Issues and Pull Requests.
+
 ## Translating the project
 
 Django survey's is available in multiple language. Your contribution would be very
@@ -86,7 +101,7 @@ python manage.py runserver
 # Then go to http://localhost:8000/rosetta to translate
 python manage.py makemessages --no-obsolete --no-wrap --ignore venv --locale de \
   --locale es --locale fr  --locale id --locale ja --locale nl --locale pl \
-  --locale pt --locale ru --locale tr --locale zh
+  --locale pt --locale ru --locale tr --locale zh --locale gr
 git add survey/locale/
 ...
 ```

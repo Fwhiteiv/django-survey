@@ -9,11 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from .category import Category
 from .survey import Survey
 
-try:  # pragma: no cover
-    from _collections import OrderedDict
-except ImportError:  # pragma: no cover
-    from ordereddict import OrderedDict
-
 LOGGER = logging.getLogger(__name__)
 
 
@@ -46,7 +41,6 @@ class SortAnswer:
 
 
 class Question(models.Model):
-
     TEXT = "text"
     SHORT_TEXT = "short-text"
     RADIO = "radio"
@@ -189,12 +183,12 @@ class Question(models.Model):
         standardized_filter,
         other_question,
     ):
-        """Return an ordered dict but the insertion order is the order of
+        """Return a dict with the insertion order matching the order of
         the related manager (ie question.answers).
 
         If you want something sorted use sorted_answers_cardinality with a set
         sort_answer parameter."""
-        cardinality = OrderedDict()
+        cardinality = {}
         for answer in self.answers.all():
             for value in answer.values:
                 value = self.__get_cardinality_value(value, group_by_letter_case, group_by_slugify, group_together)
@@ -269,6 +263,7 @@ class Question(models.Model):
 
         The ordering is reversed for same cardinality value so we have aa
         before zz."""
+        # pylint: disable=too-many-locals
         cardinality = self.answers_cardinality(
             min_cardinality, group_together, group_by_letter_case, group_by_slugify, filter, other_question
         )
@@ -280,7 +275,7 @@ class Question(models.Model):
         user_defined = isinstance(sort_answer, dict)
         valid = user_defined or sort_answer in possibles_values
         if not valid:
-            msg = "Unrecognized option '%s' for 'sort_answer': " % sort_answer
+            msg = f"Unrecognized option '{sort_answer}' for 'sort_answer': "
             msg += "use nothing, a dict (answer: rank),"
             for option in possibles_values:
                 msg += f" '{option}', or"
@@ -300,7 +295,7 @@ class Question(models.Model):
             else:
                 # There is a dict instead of an int
                 sorted_cardinality = sorted(list(cardinality.items()), key=lambda x: (-sum(x[1].values()), x[0]))
-        return OrderedDict(sorted_cardinality)
+        return dict(sorted_cardinality)
 
     def _cardinality_plus_answer(self, cardinality, value, other_question_value):
         """The user answered 'value' to our question and
@@ -345,7 +340,7 @@ class Question(models.Model):
         filter,
         standardized_filter,
     ):
-        found_answer = False
+        values = [_(settings.USER_DID_NOT_ANSWER)]
         for other_answer in other_question.answers.all():
             if user is None:
                 break
@@ -353,12 +348,8 @@ class Question(models.Model):
                 # We suppose there is only a response per user
                 # Why would you want this info if it is
                 # possible to answer multiple time ?
-                found_answer = True
+                values = other_answer.values
                 break
-        if found_answer:
-            values = other_answer.values
-        else:
-            values = [_(settings.USER_DID_NOT_ANSWER)]
         for other_value in values:
             other_value = self.__get_cardinality_value(
                 other_value, group_by_letter_case, group_by_slugify, group_together

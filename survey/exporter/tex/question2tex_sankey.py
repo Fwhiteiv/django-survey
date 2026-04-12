@@ -12,7 +12,8 @@ except ModuleNotFoundError as e:
     warnings.warn(
         "Cannot import 'sankey', please install the package using"
         "the sankey extra. (pip install django-survey-and-report[sankey])"
-        ": '{}'".format(e)
+        f": '{e}'",
+        stacklevel=2,
     )
     SANKEY = False
 
@@ -28,7 +29,6 @@ class SankeyNotInstalled(Exception):
 
 
 class Question2TexSankey(Question2Tex):
-
     """
     This class permit to generate latex code directly from the Question
     object.

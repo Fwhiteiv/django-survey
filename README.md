@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/Pierre-Sassoulas/django-survey.svg?branch=master)](https://travis-ci.org/Pierre-Sassoulas/django-survey)
 [![Coverage Status](https://coveralls.io/repos/github/Pierre-Sassoulas/django-survey/badge.svg?branch=master)](https://coveralls.io/github/Pierre-Sassoulas/django-survey?branch=master)
 [![PyPI version](https://badge.fury.io/py/django-survey-and-report.svg)](https://badge.fury.io/py/django-survey-and-report)
+[![Published on Django Packages](https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26)](https://djangopackages.org/packages/p/django-survey-and-report/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -58,7 +59,7 @@ echo 'django-survey-and-report' >> requirements.txt
 pip install -r requirements.txt
 ```
 
-Add `bootstrapform` and `survey` in the `INSTALLED_APPS` in your settings :
+Add `survey` in the `INSTALLED_APPS` in your settings :
 
 ```python
 INSTALLED_APPS = [
@@ -71,7 +72,6 @@ CSV_DIRECTORY = Path("csv") # Define the directory where csv are exported
 TEX_DIRECTORY = Path("tex") # Define the directory where tex files and pdf are exported
 
 INSTALLED_APPS += [
-	'bootstrapform',
 	'survey'
 	'modeltranslation', # Add for translation support. Put before django.contrib.admin to use with admin.
 ]
@@ -81,14 +81,7 @@ Add a URL entry to your project’s urls.py, for example:
 
 ```python
 from django.conf import settings
-from django.conf.urls import include
-
-try:
-    from django.conf.urls import url
-except ImportError:
-    # Django 4.0 replaced url by something else
-    # See https://stackoverflow.com/a/70319607/2519059
-    from django.urls import re_path as url
+from django.urls import include, path
 
 urlpatterns = [
     # Your own url pattern here
@@ -96,7 +89,7 @@ urlpatterns = [
 
 if 'survey' in settings.INSTALLED_APPS:
     urlpatterns += [
-        url(r'^survey/', include('survey.urls'))
+        path('survey/', include('survey.urls'))
     ]
 ```
 
@@ -127,8 +120,7 @@ To uninstall `django-survey-and-report`, simply comment out or remove the 'surve
 in your `INSTALLED_APPS`.
 
 If you want to use the pdf rendering you need to install `xelatex`. If you're using the
-Sankey's diagram generation you will also have to install `python-tk` (for python 2.7)
-or `python3-tk` (for python 3.x).
+Sankey's diagram generation you will also have to install `python3-tk`.
 
 ## Making a survey
 

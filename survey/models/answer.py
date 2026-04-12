@@ -1,7 +1,7 @@
 """
-    These type-specific answer models use a text field to allow for flexible
-    field sizes depending on the actual question this answer corresponds to any
-    "required" attribute will be enforced by the form.
+These type-specific answer models use a text field to allow for flexible
+field sizes depending on the actual question this answer corresponds to any
+"required" attribute will be enforced by the form.
 """
 
 import logging
@@ -17,7 +17,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Answer(models.Model):
-
     question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name=_("Question"), related_name="answers")
     response = models.ForeignKey(Response, on_delete=models.CASCADE, verbose_name=_("Response"), related_name="answers")
     created = models.DateTimeField(_("Creation date"), auto_now_add=True)
@@ -61,15 +60,15 @@ class Answer(models.Model):
         if question.type == Question.INTEGER and body and body != "":
             try:
                 body = int(body)
-            except ValueError:
+            except ValueError as e:
                 msg = "Answer is not an integer"
-                raise ValidationError(msg)
+                raise ValidationError(msg) from e
         if question.type == Question.FLOAT and body and body != "":
             try:
                 body = float(body)
-            except ValueError:
+            except ValueError as e:
                 msg = "Answer is not a number"
-                raise ValidationError(msg)
+                raise ValidationError(msg) from e
 
     def check_answer_for_select(self, choices, body):
         answers = []
